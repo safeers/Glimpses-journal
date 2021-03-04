@@ -1,0 +1,37 @@
+{% from 'helpers.jinja' import head, search, star, settings, filter, segments %}
+<!DOCTYPE html>
+<html lang="en">
+{{head('glimpses',['semantic','jquery'])}}
+<style>
+  .segment{
+    box-shadow:0px 0px 1px 0px #f5f0f0 !important;
+  }
+</style>
+<body>
+  <div class="ui two column padded stackable grid">
+    <div class="ui center aligned column">
+      <div style="position: sticky; top: 0px;">
+        <img class="ui medium spaced image logo" src={{url_for('static',filename='icons/light/logo1.png')}}>
+        <div class="ui disabled header tagline mobile hidden">A minimalistic journal.</div>
+        <div class="ui fluid four item secondary menu ">
+
+          {{search()}}
+          {{star(view)}}
+          {{settings()}}
+
+          <a href="{{url_for('new_post')}}" class="item">
+            <img class="ui avatar image" src={{url_for('static',filename='icons/light/add.png')}}>
+          </a>
+
+        </div>
+      </div>
+      <div class="ui divider mobile only padded grid"></div>
+    </div>
+    <div class="column" id="col">
+      {{filter(title)}}
+      {{segments(posts,categories,blank_msg)}}
+    </div>
+  </div>
+</body>
+
+</html>

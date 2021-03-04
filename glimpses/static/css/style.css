@@ -1,0 +1,88 @@
+@media only screen and (max-width: 767px) {
+  [class*="mobile hidden"],
+  [class*="tablet only"]:not(.mobile),
+  [class*="computer only"]:not(.mobile),
+  [class*="large monitor only"]:not(.mobile),
+  [class*="widescreen monitor only"]:not(.mobile),
+  [class*="or lower hidden"] {
+    display: none !important;
+  }
+}
+
+:root {
+  --font-color: black;
+  --bg-color: white;
+  --disabled: black;
+}
+
+[data-theme="dark"] {
+  --font-color: #ecf0f1d5;
+  --bg-color: #1b1c1d;
+  --disabled: #eaedf5;
+}
+
+body {
+  color: var(--font-color) !important;
+  background-color: var(--bg-color) !important;
+}
+
+.menug {
+  transform: translateX(50%) !important;
+}
+
+.tagline {
+  max-height: 25vh;
+  padding-bottom: 20vh !important;
+  color: var(--disabled) !important;
+}
+
+.logo {
+  min-width: 300px;
+  width: 27vw !important;
+}
+
+.filt {
+  width: 90% !important;
+}
+
+.options {
+  float: right;
+  padding-right: 2% !important;
+  overflow: initial !important;
+  max-height: 20px !important;
+}
+
+.column {
+  padding-right: 0.5% !important;
+}
+
+.categor {
+  display: inline-flex;
+  text-align: right;
+  transform: translateY(70%) !important;
+  float: right;
+}
+.seperator {
+  display: inline-flex;
+  transform: scaleY(2) !important;
+}
+
+.title {
+  padding-left: 0.5% !important;
+}
+
+.textwrap {
+  display: inline-block;
+  max-width: 80% !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tcenter {
+  transform: translateY(10%) !important;
+}
+
+.input {
+  text-align: center !important;
+}

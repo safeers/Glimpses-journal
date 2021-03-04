@@ -1,0 +1,70 @@
+{%from 'helpers.jinja' import head%}
+<!DOCTYPE html>
+<html lang="en">
+  {{head('glimpses',['semantic','jquery'])}}
+  <style>
+    .container {
+      padding-top: 5vh !important;
+    }
+  </style>
+
+  <body>
+    <div class="ui text container">
+      <div class="ui header">
+        SETTINGS
+        <a
+          href="{{url_for('home')}}"
+          class="ui right floated small basic button"
+          >Back</a
+        >
+      </div>
+      <div class="ui divider"></div>
+      <div class="ui small header">
+        <img class="ui avatar image dark" style="width: 30px !important;"
+        src={{url_for('static',filename='icons/light/moon.png')}}> &nbsp Theme
+      </div>
+      <div class="ui divider"></div>
+      <div class="ui small header">
+        Manage Categories
+      </div>
+      <div class="ui very relaxed bulleted list">
+        {% for category in categories%}
+        <div class="ui item">
+          <div class="ui content">
+            <a
+              class="ui left floated small header"
+              href="{{url_for('category',id=category.id)}}"
+            >
+              {{category.name}}
+            </a>
+
+            <a href="{{url_for('del_cat',id=category.id)}}">
+              <div
+                class="ui small right floated basic button"
+                onclick="return confirm('Are you sure?')"
+              >
+                Delete
+              </div>
+            </a>
+
+            <form
+              action="{{url_for('rename_cat',id=category.id)}}"
+              method="get"
+            >
+              <div class="ui right floated mini input">
+                <input type="text" placeholder="Rename" name="name" />
+                <input
+                  type="submit"
+                  class="ui small basic button"
+                  value="Rename"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {% endfor %}
+      </div>
+    </div>
+  </body>
+</html>

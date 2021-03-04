@@ -1,0 +1,194 @@
+{% macro head(title, libraries) %}
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title> {{title}} </title>
+
+      <link rel="shortcut icon" href={{url_for('static',filename = 'icons/logo.ico')}}>
+      <link rel="stylesheet" href={{url_for('static',filename = 'css/style.css')}}>
+
+      {% if 'jquery' in libraries %}
+      <script src="{{url_for('static',filename = 'js/jquery-3.1.1.min.js')}}"></script>
+      {% endif%}
+
+      {% if 'semantic' in libraries %}
+      <link rel="stylesheet" href={{url_for('static',filename = 'css/semantic.min.css')}}>
+      <script src={{url_for('static',filename = 'js/semantic.min.js')}}></script>
+      {% endif%}
+
+      {% if 'summernote' in libraries %}
+      <link rel="stylesheet" href={{url_for('static',filename = 'css/summernote-lite.min.css')}}>
+      <script type="text/javascript" src={{url_for('static',filename = 'js/summernote-lite.min.js')}}></script>
+      {% endif%}
+
+      <script>
+         $(document).ready(function () {
+            $('.ui.dropdown').dropdown();
+            $('.ui.accordion').accordion();
+            $('#settings').click(function () {
+               $('#setting').modal('show');
+            });
+            const theme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+            if (theme){
+               document.documentElement.setAttribute('data-theme', theme);
+                if (theme == 'dark'){
+                    toggleTheme();
+                }
+            }
+        
+        function toggleTheme(){
+            $('.ui').toggleClass('inverted');
+            $('.notdark').toggleClass('inverted');
+            if ($('.ui').hasClass('inverted')){
+               document.documentElement.setAttribute('data-theme', 'dark');
+               $('img').each(function(){
+                  $(this).attr('src',$(this).attr('src').replace("light","dark"));
+               }) ;
+               localStorage.setItem('theme', 'dark');
+            }
+            else{
+               document.documentElement.setAttribute('data-theme', 'light');
+               $('img').each(function(){
+                  $(this).attr('src',$(this).attr('src').replace("dark","light"));
+               });
+               localStorage.setItem('theme', 'light');
+            }
+         }
+         
+         $('.dark').click(toggleTheme);
+
+         $('.ui.accordion').click(function(e){
+            e.stopPropagation();
+         });
+         
+         });
+         
+        
+      </script>     
+      <script>
+         document.addEventListener("DOMContentLoaded", function () {
+            var url = "http://127.0.0.1:5001/GUI-is-still-open";
+            fetch(url, { mode: "no-cors" });
+            setInterval(function () {
+            fetch(url, { mode: "no-cors" });
+            }, 5000)();
+         });
+      </script> 
+   </head>
+{% endmacro%}
+
+{% macro search()%}
+   <div class="ui bottom pointing dropdown item">
+      <img class="ui avatar image" src={{url_for('static',filename='icons/light/search.png')}}>
+      <div class="ui menu">
+         <div class="item header" style="height: 10px !important;">&nbsp</div>
+         <form action="{{url_for('search')}}" method="get" name="searchb" class="ui input notdark">
+            <input type="text" name="query" placeholder='search..'>
+            <input class="ui secondary submit button" type="submit" value="Search">
+         </form>
+      </div>
+   </div>
+{% endmacro %}
+
+{% macro star(view)%}
+   {% if view == 'starred'%}
+   <a href="{{url_for('home',show='all')}}" class="item">
+      <img class="ui avatar image" src={{url_for('static',filename='icons/light/starred.png')}}>
+   </a>
+   {% else %}
+   <a href="{{url_for('home',show='starred')}}" class="item">
+      <img class="ui avatar image" src={{url_for('static',filename='icons/light/star.png')}}>
+   </a>
+   {% endif%}
+{% endmacro %}
+
+{% macro settings()%}
+   <a class="item" href="{{url_for('settings')}}" id="settings">
+      <img class="ui avatar image" src={{url_for('static',filename='icons/light/settings.png')}}>
+   </a>
+{%endmacro%}
+
+{% macro filter(info)%}
+   <div class="tiny ui icon dropdown">
+      <img class="ui bottom aligned filt image" src={{url_for('static', filename='icons/light/filter24.png')}}>
+      <div class="menu">
+         <a href="{{url_for('home')}}" class="item">All</a>
+         <a href="{{url_for('home',show='starred')}}" class="item">Starred</a>
+         <a href="{{url_for('home',show='categories')}}" class="item">Categories</a>
+         <a href="{{url_for('home',show='length')}}" class="item">Length</a>
+      </div>
+   </div>
+   <span class="ui disabled header">&nbsp&nbsp {{info}}</span>
+{%endmacro%}
+
+{% macro segments(posts,categories,blank_msg)%}
+   <div class="ui segments">
+      {% if posts[0] %}
+         {% for post in posts %}
+         <div class="ui segment">
+            <div class="ui middle aligned doubling grid">
+               <div class="four wide mobile five wide computer column">
+                  {% if post.is_starred %}
+                  <span class="ui teal header">{{post.created_on.strftime("%d")}} </span>
+                  {%else%}
+                  <span class="ui medium header">{{post.created_on.strftime("%d")}} </span>
+                  {%endif%}
+                  <span class="ui tiny sub header">{{post.created_on.strftime("%b")}}
+                     <a href="{{url_for('category',id=post.category.id)}}">
+                        <span class="ui categor mobile hidden  textwrap  sub header"> {{post.category.name}} &nbsp
+                           <span class="seperator">/</span>
+                        </span>
+                     </a>
+                     <div class="ui tiny large sub header">{{post.created_on.strftime("%Y")}}</div>
+                  </span>
+               </div>
+               <div class="twelve wide mobile eleven wide computer title column">
+                  <a href="{{url_for('post',id=post.id)}}">
+                     <span class="ui medium header tcenter textwrap">
+                        {{post.title}}
+                     </span>
+                  </a>
+                  <div class="ui options inline dropdown">
+                     <img class="options" src={{url_for('static',filename='icons/light/menu.png')}}>
+                     <div class="menu menudrop">
+                        <a href="{{url_for('toggle_starring',id=post.id)}}" class="item">
+                        {{'Unstar' if post.is_starred else 'Star'}}
+                        </a>
+                        <a href="{{url_for('del_post',id=post.id)}}" class="item"
+                        onclick="return confirm('Are you sure?')">Delete</a>
+                        <a href="" class="item">Export as pdf</a>
+                        <div class="item">
+                           <div class="ui accordion notdark">
+                              <div class="ui title sub header notdark" style="min-width:20vw !important;">
+                                 Add to catgeory
+                              </div>
+                              <div class="content">
+                                 <form class="padded content field ui input notdark" method="get" 
+                                    action="{{url_for('change_cat',post_id=post.id,cat_id=0)}}" >
+                                    <input placeholder="Create a new category" type="text" class="transition visible fluid" name="name" >
+                                    <input class="ui secondary submit button" type="submit" value="Add">
+                                 </form>
+                                 {% for category in categories%}
+                                    <div class="ui basic segment notdark" style="margin-top: 0px !important;margin-bottom:
+                                     0px !important; padding-left:1% !important;">
+                                      <a href="{{url_for('change_cat',post_id=post.id,cat_id=category.id)}}"> 
+                                       {{category.name}}
+                                       </a>
+                                    </div>
+                                 {% endfor%}
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+      {% else %}
+      <div class="ui header segment">
+         {{blank_msg}}
+      </div>
+      {% endif %}
+   </div>
+{% endmacro%}

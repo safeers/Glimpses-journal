@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glimpses</title>
+    <link rel="shortcut icon" href={{url_for('static',filename =
+    'icons/logo.ico')}}> <link rel="stylesheet" href={{url_for('static',filename
+    = 'css/semantic.min.css')}}>
+  </head>
+  <body>
+    <div class="ui center aligned text container">
+      <img class="ui centered medium image" style="padding-bottom:10vh
+      !important;" src={{url_for('static',filename='icons/light/logo1.png')}}>
+      <form
+        action="{{url_for('_pass')}}"
+        method="post"
+        name="searchb"
+        class="ui input"
+      >
+        <input
+          type="password"
+          name="password"
+          placeholder="enter password"
+          style="text-align: center;"
+        />
+      </form>
+    </div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+       var url = "http://127.0.0.1:5001/GUI-is-still-open";
+       fetch(url, { mode: "no-cors" });
+       setInterval(function () {
+       fetch(url, { mode: "no-cors" });
+       }, 5000)();
+    });
+  </script> 
+</html>

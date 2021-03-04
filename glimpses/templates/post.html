@@ -1,0 +1,127 @@
+{% from 'helpers.jinja' import head%}
+<!DOCTYPE html>
+<html lang="en">
+  {{head('glimpses',['semantic','summernote','jquery'])}}
+  <style>
+    .segment {
+      padding-top: 0px !important;
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+    }
+    .container {
+      padding-top: 5vh !important;
+    }
+    .buttons {
+      float: right !important;
+    }
+    .note-editor {
+      padding-bottom: 2% !important;
+    }
+
+    .ttray {
+      padding-left: 0px !important;
+    }
+  </style>
+  <body>
+    <div class="ui padded justified text container">
+      <div class="ui mini basic buttons">
+        <a class="ui button" href="{{url_for('home')}}">Back</a>
+        <div class="or"></div>
+        <a class="ui button" onclick="submitform()">Save</a>
+      </div>
+
+      <form
+        method="post"
+        name="post"
+        action="{%if post %}{{url_for('post',id=post.id)}}
+            {%else%}{{url_for('new_post')}}{%endif%}"
+      >
+        <div class="ui transparent huge fluid input basic segment">
+          <input
+            type="text"
+            class="ui huge sub header"
+            value="{%if post%}{{post.title}}{%endif%}"
+            placeholder="Title"
+            spellcheck="false"
+            name="title"
+          />
+        </div>
+
+        <div class="ui basic segment">
+          {%if post%} {{post.created_on.strftime("%b")}}
+          {{post.created_on.strftime("%d")}}, {{post.created_on.strftime("%Y")}}
+          {%else%} {{time.strftime("%b")}} {{time.strftime("%d")}},
+          {{time.strftime("%Y")}} {%endif%} <img class="ui right floated menug
+          image options ttray"
+          src={{url_for('static',filename='icons/light/menu.png')}}> <img
+          class="ui right floated menug image options tray dark hidden"
+          src={{url_for('static',filename='icons/light/moon.png')}}> <img
+          class="ui right floated menug image options tray texti hidden"
+          src={{url_for('static',filename='icons/light/textwide.png')}}>
+        </div>
+        <div class="">
+          <textarea
+            id="summernote"
+            name="content"
+            placeholder="{%if not post%}...{%endif%}"
+            style="padding-top: 5px !important;"
+          >
+                {%if post%}{{post.content}}{%endif%}
+            </textarea
+          >
+        </div>
+      </form>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $("#summernote").summernote({
+          airMode: true,
+          spellCheck: false,
+          disableGrammar: true,
+          popover: {
+            air: [
+              ["color", ["color"]],
+              ["font", ["bold", "underline", "clear"]],
+              ["fontname", ["fontname"]],
+              ["para", ["ul", "ol", "paragraph"]],
+              ["insert", ["link", "picture", "video"]],
+              ["view", ["codeview"]],
+            ],
+          },
+        });
+        $("#summernote").summernote("fontSize", 16);
+      });
+      const textView = localStorage.getItem("textView")
+        ? localStorage.getItem("textView")
+        : null;
+      if (textView) {
+        if (textView == "disabled") {
+          toggleTextView();
+        }
+      }
+      function submitform() {
+        if ($("#summernote").summernote("isEmpty")) {
+          alert("editor content is empty");
+        } else {
+          document.forms["post"].submit();
+        }
+      }
+      function toggleTextView() {
+        $(".container").toggleClass("text");
+        var isrc = $(".texti").attr("src");
+        if ($(".container").hasClass("text")) {
+          $(".texti").attr("src", isrc.replace("text", "textwide"));
+          localStorage.setItem("textView", "enabled");
+        } else {
+          $(".texti").attr("src", isrc.replace("textwide", "text"));
+          localStorage.setItem("textView", "disabled");
+        }
+      }
+      $(".ttray").click(function () {
+        $(".tray").toggleClass("hidden");
+      });
+
+      $(".texti").click(toggleTextView);
+    </script>
+  </body>
+</html>
